@@ -62,12 +62,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const formattedPrice = formatPrice(cartTotalAmount + ongkir);
 
   useEffect(() => {
-    // if (!stripe) {
-    //   return;
-    // }
-    // if (!clientSecret) {
-    //   return;
-    // }
     handleSetPaymentSuccess(false);
   }, [stripe]);
 
@@ -89,7 +83,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     maxFiles: 1,
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     // e.preventDefault();
 
     // if (!stripe || !elements) {
@@ -240,7 +234,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           errors={errors}
         />
         <select
-          className="border-2 p-3 rounded-lg"
+          className="p-3 border-2 rounded-lg"
           title="Alamat"
           defaultValue={"9293992"}
           id="location_id"
@@ -295,7 +289,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           // value={undefined}
         />
       </DropFileContainer>
-      <p className="text-rose-500 mt-1 text-xs">
+      <p className="mt-1 text-xs text-rose-500">
         {errors?.image_file && (errors?.image_file?.message as string)}
       </p>
 

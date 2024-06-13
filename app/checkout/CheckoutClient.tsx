@@ -23,45 +23,6 @@ const CheckoutClient = () => {
 
   const router = useRouter();
 
-  console.log("paymentIntent", paymentIntent);
-  console.log("clientSecret", clientSecret);
-
-  // useEffect(() => {
-  //   //create a paymentintent as soon as the page loads
-  //   if (cartProducts) {
-  //     setLoading(true);
-  //     setError(false);
-
-  //     fetch("/api/create-payment-intent", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         items: cartProducts,
-  //         location_id: Number(getLocations),
-  //         address: "Manado",
-  //         transfer_image: Image,
-  //       }),
-  //     })
-  //       .then((res) => {
-  //         setLoading(false);
-  //         if (res.status === 401) {
-  //           return router.push("/login");
-  //         }
-
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //         setClientSecret(data.paymentIntent.client_secret);
-  //         handleSetPaymentIntent(data.paymentIntent.id);
-  //       })
-  //       .catch((error) => {
-  //         setError(true);
-  //         console.log("Error", error);
-  //         toast.error("Something went wrong");
-  //       });
-  //   }
-  // }, [cartProducts, paymentIntent]);
-
   const options: StripeElementsOptions = {
     // clientSecret,
     appearance: {
@@ -79,7 +40,6 @@ const CheckoutClient = () => {
       {cartProducts && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm
-            // clientSecret={clientSecret}
             cartProducts={cartProducts}
             handleSetPaymentSuccess={handleSetPaymentSuccess}
           />
@@ -90,8 +50,8 @@ const CheckoutClient = () => {
         <div className="text-center text-rose-500">Ada Kesalahan...</div>
       )}
       {paymentSuccess && (
-        <div className="flex items-center flex-col gap-4">
-          <div className="text-teal-500 text-center">Pembayaran Berhasil</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-center text-teal-500">Pembayaran Berhasil</div>
           <div className="max-w-[220px] w-full">
             <Button
               label="Lihat Orderan"
