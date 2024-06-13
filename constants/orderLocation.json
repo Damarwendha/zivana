@@ -1,0 +1,22 @@
+[
+    {
+        "id": "663732fa367276e3491a38da",
+        "city": "Kota Bengkulu",
+        "price": 40000
+    },
+    {
+        "id": "6637333c367276e3491a38e1",
+        "city": "Bengkulu Tengah",
+        "price": 120000
+    },
+    {
+        "id": "66373357367276e3491a38e2",
+        "city": "Bengkulu Utara",
+        "price": 150000
+    },
+    {
+        "id": "66373363367276e3491a38e3",
+        "city": "Kaur",
+        "price": 150000
+    }
+]
