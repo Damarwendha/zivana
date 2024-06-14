@@ -2,19 +2,10 @@
 
 import { useCart } from "@/hooks/useCart";
 import { formatPrice } from "@/utils/formatPrice";
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-  AddressElement,
-} from "@stripe/react-stripe-js";
+import { useStripe } from "@stripe/react-stripe-js";
 import React, { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
-import Heading from "../components/Heading";
-import Button from "../components/Button";
 import { useForm } from "react-hook-form";
-import Input from "../components/inputs/Input";
-import CustomCheckBox from "../components/inputs/CustomCheckBox";
 import {
   getDownloadURL,
   getStorage,
@@ -22,100 +13,48 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import firebaseApp from "@/libs/firebase";
-import {
-  ImageType,
-  UploadedImageType,
-} from "../admin/add-products/AddProductForm";
-import DropFileContainer from "../components/DropFileContainer";
+import { UploadedImageType } from "../../admin/add-products/AddProductForm";
 import { useDropzone } from "react-dropzone";
-import { CartProductType } from "../product/[productId]/ProductDetails";
-import getLocations from "@/actions/getLocations";
-import axios from "axios";
+import { CartProductType } from "../../product/[productId]/ProductDetails";
 import orderLocations from "@/constants/orderLocation.json";
+import CheckoutFieldsStep1 from "./CheckoutFieldsStep1";
+import CheckoutFieldsStep2 from "./CheckoutFieldsStep2";
+import Button from "@/app/components/Button";
 
 interface CheckoutFormProps {
-  // clientSecret: string;
   handleSetPaymentSuccess: (value: boolean) => void;
   cartProducts: CartProductType[];
 }
 
-const CheckoutForm: React.FC<CheckoutFormProps> = ({
-  // clientSecret,
+function CheckoutForm({
   cartProducts,
   handleSetPaymentSuccess,
-}) => {
-  const { cartTotalAmount, handleClearCart, handleSetPaymentIntent } =
-    useCart();
-  const stripe = useStripe();
-  const elements = useElements();
+}: CheckoutFormProps) {
   const {
     handleSubmit,
     register,
     formState: { errors },
     setValue,
+    trigger,
     getValues,
     clearErrors,
     watch,
   } = useForm();
+  const { cartTotalAmount } = useCart();
+  const stripe = useStripe();
   const [isLoading, setIsLoading] = useState(false);
   const [ongkir, setOngkir] = useState(0);
-  const formattedPrice = formatPrice(cartTotalAmount + ongkir);
-
-  useEffect(() => {
-    handleSetPaymentSuccess(false);
-  }, [stripe]);
-
-  // DAMAR
+  const [step, setStep] = useState(1);
   const [previewImage, setPreviewImage] = useState("");
 
-  const onDrop = useCallback(
-    (acceptedFiles: any) => {
-      // Do something with the files
-      setPreviewImage(URL?.createObjectURL(acceptedFiles[0]));
-      setValue("image_file", acceptedFiles[0]);
-      clearErrors("image_file");
-    },
-    [clearErrors, setValue]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    maxFiles: 1,
-  });
+  const formattedPrice = formatPrice(cartTotalAmount + ongkir);
 
   const onSubmit = async (data: any) => {
-    // e.preventDefault();
-
-    // if (!stripe || !elements) {
-    //   return;
-    // }
-
     setIsLoading(true);
-
-    // stripe
-    //   .confirmPayment({
-    //     elements,
-    //     redirect: "if_required",
-    //   })
-    //   .then((result) => {
-    //     if (!result.error) {
-    //       toast.success("Pembayaran berhasil");
-
-    //       handleClearCart();
-    //       handleSetPaymentSuccess(true);
-    //       handleSetPaymentIntent(null);
-    //     }
-
-    //     setIsLoading(false);
-    //   });
-
-    // DAMAR SECTION
 
     // HANDLE IMAGE
     const newImages = [{ image: data.image_file }];
 
-    console.log("Product Data", data);
-    //save product to mongodb
     setIsLoading(true);
     let uploadedImages: UploadedImageType[] = [];
 
@@ -211,99 +150,50 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   };
 
   const locId = watch("location_id");
-  console.log("ong", ongkir);
+
   useEffect(() => {
     orderLocations.map((o) => {
       locId === o.id ? setOngkir(o.price) : "";
     });
   }, [locId]);
 
+  useEffect(() => {
+    handleSetPaymentSuccess(false);
+  }, [stripe]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="payment-form">
-      <div className="mb-6">
-        <Heading title="Masukkan detail pembayaran anda" />
-      </div>
-      <h2 className="mb-2 font-semibold">Informasi Pengiriman</h2>
-      <div className="flex flex-col gap-3">
-        <Input
-          label="Nama Lengkap"
-          register={register}
-          id="name"
-          required
-          type="text"
+      {step === 1 && (
+        <CheckoutFieldsStep1
+          onNextStep={async () => {
+            const isValid = await trigger(["address", "location_id", "name"]);
+            if (isValid) {
+              setStep(2);
+            }
+          }}
           errors={errors}
-        />
-        <select
-          className="p-3 border-2 rounded-lg"
-          title="Alamat"
-          defaultValue={"9293992"}
-          id="location_id"
-          {...register("location_id", { required: "*This field is required" })}
-        >
-          <option value="" label="Pilih lokasi pembayaran">
-            Pilih lokasi pembayaran
-          </option>
-          {orderLocations.map((o) => (
-            <option
-              label={o.city + ", Biaya ongkir: " + o.price}
-              key={o.id}
-              value={o.id}
-            >
-              {o.city}, Biaya ongkir: {o.price}
-            </option>
-          ))}
-        </select>
-        <Input
-          label="Alamat"
           register={register}
-          id="address"
-          required
-          type="text"
+        />
+      )}
+
+      {step === 2 && (
+        <CheckoutFieldsStep2
+          clearErrors={clearErrors}
           errors={errors}
+          onBackStep={() => setStep(1)}
+          register={register}
+          isLoading={isLoading}
+          setValue={setValue}
+          setPreviewImg={setPreviewImage}
+          previewImg={previewImage}
         />
-      </div>
+      )}
 
-      {/* <AddressElement
-        options={{
-          mode: "shipping",
-        }}
-      /> */}
-      <h2 className="mt-4 mb-2 font-semibold">Upload Bukti Transfer</h2>
-      <DropFileContainer
-        {...getRootProps()}
-        handleDeleteImage={() => {
-          setPreviewImage("");
-          setValue("image_file", "");
-        }}
-        isDragActive={isDragActive}
-        previewImage={previewImage}
-      >
-        <input
-          accept="image/*"
-          id="image_file"
-          placeholder="Please enter a value"
-          type="file"
-          {...register("image_file", { required: "*This field is required" })}
-          {...getInputProps()}
-          //   to fix failed to set value... see more here: https://stackoverflow.com/questions/66876022/setfieldvalue-formik-and-invalidstateerror-failed-to-set-the-value-property
-          // value={undefined}
-        />
-      </DropFileContainer>
-      <p className="mt-1 text-xs text-rose-500">
-        {errors?.image_file && (errors?.image_file?.message as string)}
-      </p>
-
-      {/* <PaymentElement id="payment-element" options={{ layout: "tabs" }} /> */}
       <div className="py-4 text-xl font-bold text-center text-slate-700">
         Total: {formattedPrice}
       </div>
-      <Button
-        label={isLoading ? "Memproses" : "Bayar"}
-        disabled={isLoading}
-        onClick={() => {}}
-      />
     </form>
   );
-};
+}
 
 export default CheckoutForm;
