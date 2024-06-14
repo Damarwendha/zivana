@@ -130,6 +130,7 @@ function CheckoutForm({
           items: cartProducts,
           transfer_image: transferURL,
           location_id: data.location_id,
+          account_target: data.account_target,
         };
         await fetch("/api/order", {
           method: "POST",

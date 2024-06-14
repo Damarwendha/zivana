@@ -38,8 +38,8 @@ function CheckoutFieldsStep1({ register, errors, onNextStep }: IProps) {
           id="location_id"
           {...register("location_id", { required: "*This field is required" })}
         >
-          <option value="" label="Pilih lokasi pembayaran">
-            Pilih lokasi pembayaran
+          <option value="" label="Pilih lokasi pengiriman">
+            Pilih lokasi pengiriman
           </option>
           {orderLocations.map((o) => (
             <option

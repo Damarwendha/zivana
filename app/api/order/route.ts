@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { items, location_id, address, transfer_image } = body;
+  const { items, location_id, address, transfer_image, account_target } = body;
 
   const location = await prisma.orderLocation.findUnique({
     where: { id: location_id },
@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     products: items,
     address: address,
     transferImage: transfer_image,
+    accountTarget: account_target,
   };
 
   const createdOrder = await prisma.order.create({
