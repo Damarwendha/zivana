@@ -1,17 +1,17 @@
 import Container from "../components/Container";
 import FormWrap from "../components/FormWrap";
-import CheckoutClient from "./_components/CheckoutClient";
+import FeedbackClient from "./_components/FeedbackClient";
 
-const Checkout = () => {
+function Feedback() {
   return (
     <div className="p-8">
       <Container>
         <FormWrap>
-          <CheckoutClient />
+          <FeedbackClient />
         </FormWrap>
       </Container>
     </div>
   );
-};
+}
 
-export default Checkout;
+export default Feedback;

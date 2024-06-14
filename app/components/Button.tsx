@@ -8,6 +8,7 @@ interface ButtonProps {
   outline?: boolean;
   small?: boolean;
   custom?: string;
+  type?: "submit" | "reset" | "button" | undefined;
   icon?: IconType;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
@@ -15,6 +16,7 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({
   label,
   disabled,
+  type,
   outline,
   small,
   custom,
@@ -24,6 +26,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       onClick={onClick}
+      type={type}
       disabled={disabled}
       className={`
         disabled:opacity-70
