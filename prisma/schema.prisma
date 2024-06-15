@@ -57,13 +57,15 @@ model Product {
 model Review {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   userId      String   @db.ObjectId
-  productId   String   @db.ObjectId
+  orderId String @db.ObjectId
+  productId   String?   @db.ObjectId
   rating      Int
   comment     String
   createdDate DateTime @default(now())
 
-  product Product @relation(fields: [productId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order Order @relation(fields: [orderId], references: [id])
 }
 
 model Order {
@@ -80,6 +82,7 @@ model Order {
   address         String?
   transferImage   String?
   accountTarget   String?
+  reviews Review[]
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderLocation OrderLocation? @relation(fields: [orderLocationId], references: [id], onDelete: Cascade)
