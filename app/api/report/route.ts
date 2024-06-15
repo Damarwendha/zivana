@@ -24,31 +24,3 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ createdReport });
 }
-
-export async function GET() {
-    const reports = await prisma.report.findMany({
-        select: {
-            id: true,
-            message: true,
-            createdAt: true,
-            user: {
-                select: {
-                    id: true,
-                    email: true,
-                    image: true,
-                    name: true,
-                    accounts: {
-                        select: {
-                            type: true,
-                        },
-                    },
-                },
-            },
-        }
-    });
-
-    return NextResponse.json({
-        data: reports,
-        message: 'success get all reports'
-    });
-}
