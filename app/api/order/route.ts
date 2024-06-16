@@ -63,11 +63,20 @@ export async function PUT(request: Request) {
   }
 
   const body = await request.json();
-  const { id, deliveryStatus } = body;
+  const { id, status, deliveryStatus } = body;
+
+  let newData = {};
+  if (status) {
+    newData = { status };
+  } else if (deliveryStatus) {
+    newData = { deliveryStatus };
+  } else {
+    return NextResponse.json({ error: 'status atau deliveryStatus salah satunya harus berisi' }, { status: 400});
+  }
 
   const order = await prisma.order.update({
     where: { id: id },
-    data: { deliveryStatus },
+    data: newData,
   });
 
   return NextResponse.json(order);

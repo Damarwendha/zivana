@@ -8,6 +8,7 @@ import Heading from "@/app/components/Heading";
 import Status from "@/app/components/Status";
 import StatusOrder from "@/app/components/StatusOrder";
 import {
+  MdOutlinePayment,
   MdAccessTimeFilled,
   MdDeliveryDining,
   MdDone,
@@ -161,6 +162,12 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         return (
           <div className="flex justify-between gap-4 w-full">
             <ActionBtn
+                icon={MdOutlinePayment}
+                onClick={() => {
+                  handleConfirmPayment(params.row.id);
+                }}
+            />
+            <ActionBtn
               icon={MdDeliveryDining}
               onClick={() => {
                 handleDispatch(params.row.id);
@@ -183,6 +190,19 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       },
     },
   ];
+
+  const handleConfirmPayment = useCallback((id: string) => {
+    axios.put("/api/order", {
+      id,
+      status: "complete",
+    }).then((res) => {
+      toast.success("Pembayaran Dikonfirmasi");
+      router.refresh();
+    }).catch((err) => {
+      toast.error("Konfirmasi pembayaran gagal");
+      console.log(err);
+    });
+  }, []);
 
   const handleDispatch = useCallback((id: string) => {
     axios
