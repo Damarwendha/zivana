@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: `Location ${location_id} is not found` }, { status: 400 });
   }
 
-  const total = calculateOrderAmount(items) * 100 + location.price;
+  const total = calculateOrderAmount(items) + location.price;
   const orderData = {
     user: { connect: { id: currentUser.id } },
     amount: total,
@@ -70,6 +70,9 @@ export async function PUT(request: Request) {
     newData = { status };
   } else if (deliveryStatus) {
     newData = { deliveryStatus };
+    if (deliveryStatus == 'dispatched') {
+    //   todo: kurangi stok dengan jumlah barang pembelian
+    }
   } else {
     return NextResponse.json({ error: 'status atau deliveryStatus salah satunya harus berisi' }, { status: 400});
   }
