@@ -3,11 +3,12 @@ import prisma from "@/libs/prismadb";
 export interface IProductParams {
   category?: string | null;
   searchTerm?: string | null;
+  availableOnly?: boolean | null;
 }
 
 export default async function getProducts(params: IProductParams) {
   try {
-    const { category, searchTerm } = params;
+    const { category, searchTerm, availableOnly } = params;
     let searchString = searchTerm;
 
     if (!searchTerm) {
@@ -18,6 +19,11 @@ export default async function getProducts(params: IProductParams) {
 
     if (category) {
       query.category = category;
+    }
+
+    if (availableOnly) {
+      query.stock = { gt: 0 };
+      query.inStock = true;
     }
 
     const products = await prisma.product.findMany({
