@@ -131,13 +131,12 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       width: 165,
       renderCell: (params) => {
         return (
-          <div
-            onClick={() =>
-              router.push(
-                params?.value ||
-                  "https://firebasestorage.googleapis.com/v0/b/pa-zivana.appspot.com/o/products%2F1716109684341-WhatsApp%20Image%202024-04-18%20at%2019.54.55.jpeg?alt=media&token=4ed5dae0-6338-4615-9888-7d0545ed9dc8"
-              )
+          <a
+            href={
+              params?.value ||
+              "https://firebasestorage.googleapis.com/v0/b/pa-zivana.appspot.com/o/products%2F1716109684341-WhatsApp%20Image%202024-04-18%20at%2019.54.55.jpeg?alt=media&token=4ed5dae0-6338-4615-9888-7d0545ed9dc8"
             }
+            target="_blank"
             className="relative w-[70px] aspect-square"
           >
             <Image
@@ -149,7 +148,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
               fill
               className="object-contain"
             />
-          </div>
+          </a>
         );
       },
     },
@@ -159,7 +158,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       width: 200,
       renderCell: (params) => {
         return (
-          <div className="flex justify-between gap-4 w-full">
+          <div className="flex justify-between w-full gap-4">
             <ActionBtn
               icon={MdDeliveryDining}
               onClick={() => {
@@ -218,7 +217,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
 
   return (
     <div className="max-w-[1150px] m-auto text-xl">
-      <div className="mb-4 mt-8">
+      <div className="mt-8 mb-4">
         <Heading title="Kelola Orderan" center />
       </div>
       <div style={{ height: 600, width: "100%" }}>

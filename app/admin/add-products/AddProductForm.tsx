@@ -238,14 +238,14 @@ const AddProductForm = () => {
       />
       <div className="w-full font-medium">
         <div className="mb-2 font-semibold">Pilih Kategori</div>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h[50vh] overflow-y-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-[50vh] overflow-y-auto">
           {categories.map((item) => {
             if (item.label === "All") {
               return null;
             }
 
             return (
-              <div key={item.label} className="col-span">
+              <div key={item.label} className="col-span-1">
                 <CategoryInput
                   onClick={(category) => setCustomValue("category", category)}
                   selected={category === item.label}
@@ -257,7 +257,7 @@ const AddProductForm = () => {
           })}
         </div>
       </div>
-      <div className="w-full flex flex-col flex-wrap gap-4">
+      <div className="flex flex-col flex-wrap w-full gap-4">
         <div>
           <div className="font-bold">
             Pilih warna produk yang tersedia dan unggah gambarnya.
