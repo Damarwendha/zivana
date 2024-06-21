@@ -31,6 +31,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   const router = useRouter();
   const storage = getStorage(firebaseApp);
   let rows: any = [];
+  console.log("products", products);
 
   if (products) {
     rows = products.map((product) => {
@@ -41,6 +42,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         category: product.category,
         brand: product.brand,
         inStock: product.inStock,
+        stock: product.stock,
         images: product.images,
       };
     });
@@ -62,7 +64,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     { field: "category", headerName: "Kategori", width: 100 },
     { field: "brand", headerName: "Merek", width: 100 },
     {
-      field: "inStock",
+      field: "stock",
       headerName: "Stok Barang",
       width: 150,
       renderCell: (params) => {
@@ -70,7 +72,11 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
           <div>
             {params.row.inStock === true ? (
               <Status
-                text="Stok Tersedia"
+                text={
+                  params.row.stock
+                    ? `${params.row.stock} Stok tersedia`
+                    : "Stok tersedia"
+                }
                 icon={MdDone}
                 bg="bg-teal-200"
                 color="text-teal-700"
@@ -93,7 +99,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       width: 200,
       renderCell: (params) => {
         return (
-          <div className="flex justify-between gap-4 w-full">
+          <div className="flex justify-between w-full gap-4">
             <ActionBtn
               icon={MdCached}
               onClick={() => {
@@ -167,7 +173,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
 
   return (
     <div className="max-w-[1150px] m-auto text-xl">
-      <div className="mb-4 mt-8">
+      <div className="mt-8 mb-4">
         <Heading title="Kelola Produk" center />
       </div>
       <div style={{ height: 600, width: "100%" }}>
