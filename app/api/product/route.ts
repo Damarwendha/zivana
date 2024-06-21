@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { name, description, price, brand, category, inStock, images } = body;
+  const { name, description, price, brand, category, inStock, images, stock } = body;
 
   const product = await prisma.product.create({
     data: {
@@ -20,6 +20,7 @@ export async function POST(request: Request) {
       description,
       brand,
       category,
+      stock,
       inStock,
       images,
       price: parseFloat(price),
@@ -37,11 +38,11 @@ export async function PUT(request: Request) {
   }
 
   const body = await request.json();
-  const { id, inStock } = body;
+  const { id, inStock, stock } = body;
 
   const product = await prisma.product.update({
     where: { id: id },
-    data: { inStock },
+    data: { inStock, stock },
   });
 
   return NextResponse.json(product);

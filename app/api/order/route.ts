@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { items, location_id, address, transfer_image } = body;
+  const { items, location_id, address, transfer_image, account_target } = body;
 
   const location = await prisma.orderLocation.findUnique({
     where: { id: location_id },
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: `Location ${location_id} is not found` }, { status: 400 });
   }
 
-  const total = calculateOrderAmount(items) * 100 + location.price;
+  const total = calculateOrderAmount(items) + location.price;
   const orderData = {
     user: { connect: { id: currentUser.id } },
     amount: total,
@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     products: items,
     address: address,
     transferImage: transfer_image,
+    accountTarget: account_target,
   };
 
   const createdOrder = await prisma.order.create({
@@ -62,11 +63,50 @@ export async function PUT(request: Request) {
   }
 
   const body = await request.json();
-  const { id, deliveryStatus } = body;
+  const { id, status, deliveryStatus } = body;
+
+  const oldOrderData = await prisma.order.findUnique({
+    where: { id: id },
+  });
+
+  if (!oldOrderData) {
+    return NextResponse.json({error: `data order id: ${id} tidak ada`}, {status: 400});
+  }
+
+  let newData = {};
+  if (status) {
+    newData = { status };
+  } else if (deliveryStatus) {
+    newData = { deliveryStatus };
+    if (deliveryStatus == 'delivered') {
+      // kurangi stok dengan jumlah barang pembelian
+      for (const itemProduct of oldOrderData.products) {
+        const productData = await prisma.product.findUnique({
+          where: {
+            id: itemProduct.id
+          }
+        });
+        if (!productData) {
+          return NextResponse.json({error: `data product id: ${itemProduct.id} tidak ada`}, {status: 400});
+        }
+        await prisma.product.update({
+          where: {
+            id: productData.id
+          },
+          data: {
+            stock: productData.stock - itemProduct.quantity,
+            inStock: productData.stock > itemProduct.quantity,
+          },
+        });
+      }
+    }
+  } else {
+    return NextResponse.json({ error: 'status atau deliveryStatus salah satunya harus berisi' }, { status: 400});
+  }
 
   const order = await prisma.order.update({
     where: { id: id },
-    data: { deliveryStatus },
+    data: newData,
   });
 
   return NextResponse.json(order);

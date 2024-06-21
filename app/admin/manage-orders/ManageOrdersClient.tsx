@@ -8,6 +8,7 @@ import Heading from "@/app/components/Heading";
 import Status from "@/app/components/Status";
 import StatusOrder from "@/app/components/StatusOrder";
 import {
+  MdOutlinePayment,
   MdAccessTimeFilled,
   MdDeliveryDining,
   MdDone,
@@ -38,7 +39,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       return {
         id: order.id,
         customer: order.user.name,
-        amount: formatPrice(order.amount / 100),
+        amount: formatPrice(order.amount),
         transferImage: order.transferImage,
         paymentStatus: order.status,
         date: moment(order.createDate).locale("id").format("ll"),
@@ -160,6 +161,12 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         return (
           <div className="flex justify-between w-full gap-4">
             <ActionBtn
+                icon={MdOutlinePayment}
+                onClick={() => {
+                  handleConfirmPayment(params.row.id);
+                }}
+            />
+            <ActionBtn
               icon={MdDeliveryDining}
               onClick={() => {
                 handleDispatch(params.row.id);
@@ -182,6 +189,19 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       },
     },
   ];
+
+  const handleConfirmPayment = useCallback((id: string) => {
+    axios.put("/api/order", {
+      id,
+      status: "complete",
+    }).then((res) => {
+      toast.success("Pembayaran Dikonfirmasi");
+      router.refresh();
+    }).catch((err) => {
+      toast.error("Konfirmasi pembayaran gagal");
+      console.log(err);
+    });
+  }, []);
 
   const handleDispatch = useCallback((id: string) => {
     axios
