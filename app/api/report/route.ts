@@ -12,8 +12,6 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { message } = body;
 
-    console.log('message : ', message);
-
     const reportData = {
         user: { connect: { id: currentUser.id } },
         message: message,
