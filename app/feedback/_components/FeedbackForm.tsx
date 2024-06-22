@@ -20,7 +20,9 @@ function FeedbackForm() {
     axios
       .post("/api/report", data)
       .then((res) => {
-        toast.success("Pesan Berhasil Terkirim!");
+        toast.success(
+          "Pesan Berhasil Terkirim! Kami akan membalas anda di email"
+        );
       })
       .catch((err) => {
         toast.error("Oops! gagal");
@@ -34,7 +36,7 @@ function FeedbackForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-6">
-        <Heading title="Berikan Saran dan Masukan" />
+        <Heading title="Kirim Pesan ke Email Kami" />
       </div>
 
       <div className="space-y-4">
