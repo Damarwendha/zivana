@@ -12,7 +12,6 @@ interface HomeProps {
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  searchParams.availableOnly = true;
   const products = await getProducts(searchParams);
 
   if (products.length === 0) {
