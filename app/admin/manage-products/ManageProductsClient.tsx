@@ -103,7 +103,11 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
             <ActionBtn
               icon={MdCached}
               onClick={() => {
-                handleToggleStock(params.row.id, params.row.inStock);
+                handleToggleStock(
+                  params.row.id,
+                  params.row.inStock,
+                  params.row.stock
+                );
               }}
             />
             <ActionBtn
@@ -124,21 +128,25 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     },
   ];
 
-  const handleToggleStock = useCallback((id: string, inStock: boolean) => {
-    axios
-      .put("/api/product", {
-        id,
-        inStock: !inStock,
-      })
-      .then((res) => {
-        toast.success("Status produk berubah");
-        router.refresh();
-      })
-      .catch((err) => {
-        toast.error("Terjadi kesalahan");
-        console.log(err);
-      });
-  }, []);
+  const handleToggleStock = useCallback(
+    (id: string, inStock: boolean, stock: number) => {
+      axios
+        .put("/api/product", {
+          id,
+          stock: stock - 1,
+          inStock: stock >= 0,
+        })
+        .then((res) => {
+          toast.success("Status produk berubah");
+          router.refresh();
+        })
+        .catch((err) => {
+          toast.error("Terjadi kesalahan");
+          console.log(err);
+        });
+    },
+    []
+  );
 
   const handleDelete = useCallback(async (id: string, images: any[]) => {
     toast("Menghapus produk, proses!");
