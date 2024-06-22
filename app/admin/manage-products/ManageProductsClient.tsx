@@ -31,7 +31,6 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   const router = useRouter();
   const storage = getStorage(firebaseApp);
   let rows: any = [];
-  console.log("products", products);
 
   if (products) {
     rows = products.map((product) => {
@@ -134,7 +133,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
         .put("/api/product", {
           id,
           stock: stock - 1,
-          inStock: stock >= 0,
+          inStock: stock > 0,
         })
         .then((res) => {
           toast.success("Status produk berubah");
