@@ -136,7 +136,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       axios
         .put("/api/product", {
           id,
-          // stock: stock - 1,
+          stock: inStock ? 0 : 1,
           inStock: !inStock,
         })
         .then((res) => {

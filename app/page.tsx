@@ -2,7 +2,6 @@ export const revalidate = 0;
 
 import Container from "./components/Container";
 import HomeBanner from "./components/HomeBanner";
-import { truncateText } from "@/utils/truncateText";
 import ProductCard from "./components/products/ProductCard";
 import getProducts, { IProductParams } from "@/actions/getProducts";
 import NullData from "./components/NullData";
@@ -13,6 +12,7 @@ interface HomeProps {
 
 export default async function Home({ searchParams }: HomeProps) {
   searchParams.availableOnly = true;
+
   const products = await getProducts(searchParams);
 
   if (products.length === 0) {
@@ -39,7 +39,11 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {shuffledProducts.map((product: any) => {
-            return <ProductCard data={product} key={product.id} />;
+            return (
+              (product.inStock || product.stock <= 0) && (
+                <ProductCard data={product} key={product.id} />
+              )
+            );
           })}
         </div>
       </Container>
