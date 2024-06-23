@@ -47,11 +47,11 @@ const AdminNav = () => {
               selected={pathname === "/admin/manage-orders"}
             />
           </Link>
-          <Link href="/admin/manage-feedback">
+          <Link href="/admin/manage-feedbacks">
             <AdminNavItem
               label="Kelola Feedback"
               icon={MdQuestionAnswer}
-              selected={pathname === "/admin/manage-feedback"}
+              selected={pathname === "/admin/manage-feedbacks"}
             />
           </Link>
         </div>
