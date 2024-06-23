@@ -45,7 +45,7 @@ const ManageFeedbacksClient: React.FC<ManageFeedbacksClientProps> = ({
       },
     },
     {
-      field: "date",
+      field: "createdAt",
       headerName: "Tanggal",
       width: 165,
     },
