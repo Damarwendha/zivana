@@ -63,7 +63,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     { field: "category", headerName: "Kategori", width: 100 },
     { field: "brand", headerName: "Merek", width: 100 },
     {
-      field: "stock",
+      field: "inStock",
       headerName: "Stok Barang",
       width: 150,
       renderCell: (params) => {
@@ -71,11 +71,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
           <div>
             {params.row.inStock === true ? (
               <Status
-                text={
-                  params.row.stock
-                    ? `${params.row.stock} Stok tersedia`
-                    : "Stok tersedia"
-                }
+                text={"Stok tersedia"}
                 icon={MdDone}
                 bg="bg-teal-200"
                 color="text-teal-700"
@@ -90,6 +86,14 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
             )}
           </div>
         );
+      },
+    },
+    {
+      field: "stock",
+      headerName: "Jumlah Stok",
+      width: 150,
+      renderCell: (params) => {
+        return <div>{params.row.stock}</div>;
       },
     },
     {
@@ -132,8 +136,8 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       axios
         .put("/api/product", {
           id,
-          stock: stock - 1,
-          inStock: stock > 0,
+          // stock: stock - 1,
+          inStock: !inStock,
         })
         .then((res) => {
           toast.success("Status produk berubah");

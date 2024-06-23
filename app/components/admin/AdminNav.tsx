@@ -7,6 +7,7 @@ import {
   MdDns,
   MdFormatListBulleted,
   MdLibraryAdd,
+  MdQuestionAnswer,
 } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import Container from "../Container";
@@ -17,7 +18,7 @@ const AdminNav = () => {
   return (
     <div className="w-full shadow-sm top-20 border-b-[1px] pt-4">
       <Container>
-        <div className="flex flex-row items-center justify-between md:justify-center gap-8 md:gap-12 overflow-x-auto flex-nowrap">
+        <div className="flex flex-row items-center justify-between gap-8 overflow-x-auto md:justify-center md:gap-12 flex-nowrap">
           <Link href="/admin">
             <AdminNavItem
               label="Beranda"
@@ -44,6 +45,13 @@ const AdminNav = () => {
               label="Kelola Orderan"
               icon={MdFormatListBulleted}
               selected={pathname === "/admin/manage-orders"}
+            />
+          </Link>
+          <Link href="/admin/manage-feedback">
+            <AdminNavItem
+              label="Kelola Feedback"
+              icon={MdQuestionAnswer}
+              selected={pathname === "/admin/manage-feedback"}
             />
           </Link>
         </div>
