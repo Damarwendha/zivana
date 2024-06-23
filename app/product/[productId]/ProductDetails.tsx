@@ -24,7 +24,6 @@ export type CartProductType = {
   selectedImg: SelectedImgType;
   quantity: number;
   price: number;
-  stock: number;
 };
 
 export type SelectedImgType = {
@@ -49,7 +48,6 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     selectedImg: { ...product.images[0] },
     quantity: 1,
     price: product.price,
-    stock: product.stock,
   });
   const router = useRouter();
 
@@ -82,8 +80,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleQtyIncrease = useCallback(async () => {
     if (cartProduct.quantity >= 99) return;
-    if (cartProduct.quantity > cartProduct.stock) {
-      toast.error(`Stok hanya tersedia ${cartProduct.stock}`);
+    if (cartProduct.quantity > product.stock) {
+      toast.error(`Stok hanya tersedia ${product.stock}`);
       return;
     }
 
@@ -103,8 +101,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   }, [cartProduct]);
 
   function onAddProductToCart() {
-    if (cartProduct.quantity > cartProduct.stock) {
-      toast.error(`Stok hanya tersedia ${cartProduct.stock}`);
+    if (cartProduct.quantity > product.stock) {
+      toast.error(`Stok hanya tersedia ${product.stock}`);
       return;
     }
     handleAddProductToCart(cartProduct);
@@ -131,6 +129,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         </div>
         <div>
           <span className="font-semibold">Merek :</span> {product.brand}
+        </div>
+        <div>
+          <span className="font-semibold">Jumlah Stok :</span> {product.stock}
         </div>
         <div className={product.inStock ? "text-teal-400" : "text-rose-400"}>
           {product.inStock ? "Stok tersedia" : "Stok kosong"}
