@@ -31,7 +31,6 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   const router = useRouter();
   const storage = getStorage(firebaseApp);
   let rows: any = [];
-  console.log("products", products);
 
   if (products) {
     rows = products.map((product) => {
@@ -64,7 +63,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     { field: "category", headerName: "Kategori", width: 100 },
     { field: "brand", headerName: "Merek", width: 100 },
     {
-      field: "stock",
+      field: "inStock",
       headerName: "Stok Barang",
       width: 150,
       renderCell: (params) => {
@@ -72,11 +71,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
           <div>
             {params.row.inStock === true ? (
               <Status
-                text={
-                  params.row.stock
-                    ? `${params.row.stock} Stok tersedia`
-                    : "Stok tersedia"
-                }
+                text={"Stok tersedia"}
                 icon={MdDone}
                 bg="bg-teal-200"
                 color="text-teal-700"
@@ -94,6 +89,14 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
       },
     },
     {
+      field: "stock",
+      headerName: "Jumlah Stok",
+      width: 150,
+      renderCell: (params) => {
+        return <div>{params.row.stock}</div>;
+      },
+    },
+    {
       field: "action",
       headerName: "Aksi",
       width: 200,
@@ -103,7 +106,11 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
             <ActionBtn
               icon={MdCached}
               onClick={() => {
-                handleToggleStock(params.row.id, params.row.inStock);
+                handleToggleStock(
+                  params.row.id,
+                  params.row.inStock,
+                  params.row.stock
+                );
               }}
             />
             <ActionBtn
@@ -124,21 +131,25 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
     },
   ];
 
-  const handleToggleStock = useCallback((id: string, inStock: boolean) => {
-    axios
-      .put("/api/product", {
-        id,
-        inStock: !inStock,
-      })
-      .then((res) => {
-        toast.success("Status produk berubah");
-        router.refresh();
-      })
-      .catch((err) => {
-        toast.error("Terjadi kesalahan");
-        console.log(err);
-      });
-  }, []);
+  const handleToggleStock = useCallback(
+    (id: string, inStock: boolean, stock: number) => {
+      axios
+        .put("/api/product", {
+          id,
+          stock: inStock ? 0 : 1,
+          inStock: !inStock,
+        })
+        .then((res) => {
+          toast.success("Status produk berubah");
+          router.refresh();
+        })
+        .catch((err) => {
+          toast.error("Terjadi kesalahan");
+          console.log(err);
+        });
+    },
+    []
+  );
 
   const handleDelete = useCallback(async (id: string, images: any[]) => {
     toast("Menghapus produk, proses!");

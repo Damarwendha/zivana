@@ -8,6 +8,7 @@ import { useCart } from "@/hooks/useCart";
 import { Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { MdCheckCircle } from "react-icons/md";
 
 interface ProductDetailsProps {
@@ -77,8 +78,10 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     [cartProduct.selectedImg]
   );
 
-  const handleQtyIncrease = useCallback(() => {
-    if (cartProduct.quantity === 99) {
+  const handleQtyIncrease = useCallback(async () => {
+    if (cartProduct.quantity >= 99) return;
+    if (cartProduct.quantity > product.stock) {
+      toast.error(`Stok hanya tersedia ${product.stock}`);
       return;
     }
 
@@ -97,14 +100,22 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     });
   }, [cartProduct]);
 
+  function onAddProductToCart() {
+    if (cartProduct.quantity > product.stock) {
+      toast.error(`Stok hanya tersedia ${product.stock}`);
+      return;
+    }
+    handleAddProductToCart(cartProduct);
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
       <ProductImage
         cartProduct={cartProduct}
         product={product}
         handleColorSelect={handleColorSelect}
       />
-      <div className="flex flex-col gap-1 text-slate-500 text-sm">
+      <div className="flex flex-col gap-1 text-sm text-slate-500">
         <h2 className="text-3xl font-medium text-slate-700">{product.name}</h2>
         <div className="flex items-center gap-2">
           <Rating value={productRating} readOnly />
@@ -119,13 +130,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <div>
           <span className="font-semibold">Merek :</span> {product.brand}
         </div>
+        <div>
+          <span className="font-semibold">Jumlah Stok :</span> {product.stock}
+        </div>
         <div className={product.inStock ? "text-teal-400" : "text-rose-400"}>
           {product.inStock ? "Stok tersedia" : "Stok kosong"}
         </div>
         <Horizontal />
         {isProductInCart ? (
           <>
-            <p className="mb-2 text-slate-500 flex items-center gap-1">
+            <p className="flex items-center gap-1 mb-2 text-slate-500">
               <MdCheckCircle className="text-teal-400" size={20} />
               <span>Produk dimasukan ke keranjang</span>
             </p>
@@ -154,10 +168,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             />
             <Horizontal />
             <div className="max-w-[300px]">
-              <Button
-                label="Masukan Keranjang"
-                onClick={() => handleAddProductToCart(cartProduct)}
-              />
+              <Button label="Masukan Keranjang" onClick={onAddProductToCart} />
             </div>
           </>
         )}
