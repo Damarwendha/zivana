@@ -84,7 +84,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
           )}
         </div>
       </div>
-      <div>Waktu: {moment(order.createDate).fromNow()}</div>
+      <div>Tanggal: {moment(order.createDate).locale("id").format("ll")}</div>
       <div>
         <h2 className="font-semibold mt-4 mb-2">Produk dipesan</h2>
         <div className="grid grid-cols-5 text-xs gap-4 pb-2 items-center">

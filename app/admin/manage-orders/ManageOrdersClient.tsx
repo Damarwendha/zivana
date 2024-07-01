@@ -52,7 +52,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 170 },
+    // { field: "id", headerName: "ID", width: 170 },
     { field: "customer", headerName: "Nama Pelanggan", width: 180 },
     {
       field: "amount",

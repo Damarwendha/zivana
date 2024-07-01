@@ -42,6 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
       items-center
       w-full
       gap-1
+      bg-blue-100
       "
       >
         <div className="aspect-square overflow-hidden relative w-full">
@@ -56,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
         <div>
           <Rating value={productRating} readOnly />
         </div>
-        <div>{data.reviews.length} reviews</div>
+        <div>{data.reviews.length} Ulasan</div>
         <div className="font-semibold">{formatPrice(data.price)}</div>
       </div>
     </div>

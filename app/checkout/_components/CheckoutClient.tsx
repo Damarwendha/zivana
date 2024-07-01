@@ -51,7 +51,7 @@ const CheckoutClient = () => {
       )}
       {paymentSuccess && (
         <div className="flex flex-col items-center gap-4">
-          <div className="text-center text-teal-500">Pembayaran Berhasil</div>
+          {/* <div className="text-center text-teal-500">Pembayaran Berhasil</div> */}
           <div className="max-w-[220px] w-full">
             <Button
               label="Lihat Orderan"

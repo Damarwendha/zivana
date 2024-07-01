@@ -25,13 +25,13 @@ interface IProps {
 const LIST_TUJUAN_PEMBAYARAN = [
   {
     account_type: "DANA",
-    account_target: "085856209361",
-    account_name: "DAMARWENDHA",
+    account_target: "081273312278",
+    account_name: " M RAYHAN BILHAQI",
   },
   {
-    account_type: "BANK BRI",
-    account_target: "68234932842342",
-    account_name: "DAMARWENDHA",
+    account_type: "BANK Mandiri",
+    account_target: "1790003519159",
+    account_name: " M RAYHAN BILHAQI",
   },
 ];
 

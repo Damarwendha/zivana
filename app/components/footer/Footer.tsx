@@ -2,10 +2,9 @@ import Link from "next/link";
 import Container from "../Container";
 import FooterList from "./FooterList";
 import { MdFacebook } from "react-icons/md";
+import { RiWhatsappFill } from "react-icons/ri";
 import {
-  AiFillTwitterCircle,
   AiFillInstagram,
-  AiFillYoutube,
 } from "react-icons/ai";
 
 const Footer = () => {
@@ -22,13 +21,13 @@ const Footer = () => {
             <Link href="#">Speaker</Link>
             <Link href="#">Peralatan Dapur</Link>
           </FooterList>
-          <FooterList>
+          {/* <FooterList>
             <h3 className="text-base font-bold mb-2">Layanan Pelanggan</h3>
             <Link href="#">Hubungi Kami</Link>
             <Link href="#">Kebijakan Pengiriman</Link>
             <Link href="#">Pengembalian & Penukaran</Link>
             <Link href="#">Pertanyaan</Link>
-          </FooterList>
+          </FooterList> */}
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-base font-bold mb-2">Tentang Kami</h3>
             <p className="mb-2">
@@ -45,13 +44,10 @@ const Footer = () => {
                 <MdFacebook size={24} />
               </Link>
               <Link href="#">
-                <AiFillTwitterCircle size={24} />
+                <RiWhatsappFill size={24} />
               </Link>
               <Link href="#">
                 <AiFillInstagram size={24} />
-              </Link>
-              <Link href="#">
-                <AiFillYoutube size={24} />
               </Link>
             </div>
           </FooterList>
