@@ -50,12 +50,11 @@ export async function POST(request: Request) {
         { amount: total }
       );
 
-      // update the order
       const [existing_order, update_order] = await Promise.all([
         prisma.order.findFirst({
           where: { paymentIntentId: payment_intent_id },
         }),
-        prisma.order.update({
+        prisma.order.updateMany({
           where: { paymentIntentId: payment_intent_id },
           data: {
             amount: total,

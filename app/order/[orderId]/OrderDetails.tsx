@@ -15,7 +15,7 @@ interface OrderDetailsProps {
 
 moment.locale("id");
 
-const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
+const OrderDetails: React.FC<any> = ({ order }) => {
   console.log("or", order);
   return (
     <div className="max-w-[1150px] m-auto flex flex-col gap-2">
@@ -94,7 +94,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
           <div className="justify-self-end">TOTAL</div>
         </div>
         {order.products &&
-          order.products.map((item) => {
+          order.products.map((item: any) => {
             return <OrderItem key={item.id} item={item}></OrderItem>;
           })}
       </div>
