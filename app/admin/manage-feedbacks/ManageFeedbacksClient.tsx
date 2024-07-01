@@ -32,7 +32,7 @@ const ManageFeedbacksClient: React.FC<ManageFeedbacksClientProps> = ({
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 220 },
+    // { field: "id", headerName: "ID", width: 220 },
     { field: "userEmail", headerName: "Email", width: 220 },
     {
       field: "message",

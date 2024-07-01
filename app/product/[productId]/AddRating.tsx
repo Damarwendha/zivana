@@ -71,19 +71,19 @@ const AddRating:React.FC<AddRatingProps> = ({product, user}) => {
     if(userReview || !deliveredOrder) return null
 
     return ( <div className="flex flex-col gap-2 max-w-[500px]">
-        <Heading title='Rate this product'/>
+        <Heading title='Ulasan'/>
         <Rating onChange={(event, newValue) =>{
             setCustomValue('rating', newValue)
         }}/>
         <Input
         id='comment'
-        label="Comment"
+        label="Beri Ulasan"
         disabled = {isLoading}
         register={register}
         errors={errors}
         required
         />
-        <Button label={isLoading ? "Loading" : 'Rate Product'} onClick={handleSubmit(onSubmit)}/>
+        <Button label={isLoading ? "Loading" : 'Kirim'} onClick={handleSubmit(onSubmit)}/>
     </div> );
 }
  

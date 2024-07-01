@@ -48,7 +48,7 @@ const ManageProductsClient: React.FC<ManageProductsClientProps> = ({
   }
 
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 220 },
+    // { field: "id", headerName: "ID", width: 220 },
     { field: "name", headerName: "Nama Produk", width: 220 },
     {
       field: "price",
