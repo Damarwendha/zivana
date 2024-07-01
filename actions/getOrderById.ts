@@ -13,19 +13,22 @@ export default async function getOrderById(params: IParams) {
       },
     });
 
+    if (!order) return null;
+
+    let newOrder: any = order;
+
     if (order?.orderLocationId) {
       const location = await prisma.orderLocation.findUnique({
         where: { id: order.orderLocationId },
       });
 
       if (location) {
-        order.ongkir = location.price;
-        order.amount = order.amount - location.price;
+        newOrder.ongkir = location.price;
+        newOrder.amount = order.amount - location.price;
       }
     }
 
-    if (!order) return null;
-    return order;
+    return newOrder;
   } catch (error: any) {
     throw new Error(error);
   }
