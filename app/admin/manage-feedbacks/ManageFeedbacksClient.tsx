@@ -1,17 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { Report } from "@prisma/client";
+import { Report, User } from "@prisma/client";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Heading from "@/app/components/Heading";
 import { useRouter } from "next/navigation";
-import { getStorage } from "firebase/storage";
+import {deleteObject, getStorage, ref} from "firebase/storage";
 import firebaseApp from "@/libs/firebase";
 import moment from "moment";
+import ActionBtn from "@/app/components/ActionBtn";
+import {MdDelete} from "react-icons/md";
+import {useCallback} from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 interface ManageFeedbacksClientProps {
-  feedbacks: Report[];
+  feedbacks: ReportSiswaDto[];
 }
+
+type ReportSiswaDto = Report & {
+  user: User
+};
 
 const ManageFeedbacksClient: React.FC<ManageFeedbacksClientProps> = ({
   feedbacks,
@@ -49,40 +58,38 @@ const ManageFeedbacksClient: React.FC<ManageFeedbacksClientProps> = ({
       headerName: "Tanggal",
       width: 165,
     },
-    // {
-    //   field: "action",
-    //   headerName: "Aksi",
-    //   width: 200,
-    //   renderCell: (params) => {
-    //     return (
-    //       <div className="flex justify-between w-full gap-4">
-    //         <ActionBtn
-    //           icon={MdCached}
-    //           onClick={() => {
-    //             handleToggleStock(
-    //               params.row.id,
-    //               params.row.inStock,
-    //               params.row.stock
-    //             );
-    //           }}
-    //         />
-    //         <ActionBtn
-    //           icon={MdDelete}
-    //           onClick={() => {
-    //             handleDelete(params.row.id, params.row.images);
-    //           }}
-    //         />
-    //         <ActionBtn
-    //           icon={MdRemoveRedEye}
-    //           onClick={() => {
-    //             router.push(`feedback/${params.row.id}`);
-    //           }}
-    //         />
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      field: "action",
+      headerName: "Aksi",
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <div className="flex justify-between w-full gap-4">
+            <ActionBtn
+              icon={MdDelete}
+              onClick={async () => {
+                await handleDelete(params.row.id);
+              }}
+            />
+          </div>
+        );
+      },
+    },
   ];
+
+  const handleDelete = useCallback(async (id: string) => {
+    toast("Menghapus report, proses!");
+
+    axios
+      .delete(`/api/report/${id}`)
+      .then(() => {
+        toast.success("Report berhasil dihapus");
+        router.refresh();
+      }).catch((err) => {
+        toast.error("Gagal menghapus report");
+        console.log(err);
+      });
+  }, []);
 
   return (
     <div className="max-w-[1150px] m-auto text-xl">

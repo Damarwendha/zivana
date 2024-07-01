@@ -12,7 +12,7 @@ import {
   MdAccessTimeFilled,
   MdDeliveryDining,
   MdDone,
-  MdRemoveRedEye,
+  MdRemoveRedEye, MdDelete,
 } from "react-icons/md";
 import ActionBtn from "@/app/components/ActionBtn";
 import { useCallback } from "react";
@@ -21,6 +21,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import moment from "moment";
 import Image from "next/image";
+import {deleteObject, getStorage, ref} from "firebase/storage";
+import firebaseApp from "@/libs/firebase";
 
 interface ManageOrdersClientProps {
   orders: ExtendedOrder[];
@@ -32,6 +34,7 @@ type ExtendedOrder = Order & {
 
 const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
   const router = useRouter();
+  const storage = getStorage(firebaseApp);
   let rows: any = [];
 
   if (orders) {
@@ -156,7 +159,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
     {
       field: "action",
       headerName: "Aksi",
-      width: 200,
+      width: 240,
       renderCell: (params) => {
         return (
           <div className="flex justify-between w-full gap-4">
@@ -176,6 +179,12 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
               icon={MdDone}
               onClick={() => {
                 handleDeliver(params.row.id);
+              }}
+            />
+            <ActionBtn
+              icon={MdDelete}
+              onClick={ async () => {
+                await handleDelete(params.row.id, params.row.transferImage);
               }}
             />
             <ActionBtn
@@ -231,6 +240,36 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       })
       .catch((err) => {
         toast.error("Oops! gagal");
+        console.log(err);
+      });
+  }, []);
+
+  const handleDelete = useCallback(async (id: string, images: any[]) => {
+    toast("Menghapus order, proses!");
+
+    const handleImageDelete = async () => {
+      try {
+        for (const item of images) {
+          if (item.image) {
+            const imageRef = ref(storage, item.image);
+            await deleteObject(imageRef);
+            console.log("Menghapus gambar transfer", item.image);
+          }
+        }
+      } catch (error) {
+        return console.log("Gagal menghapus gambar transfer", error);
+      }
+    };
+
+    await handleImageDelete();
+
+    axios
+      .delete(`/api/order/${id}`)
+      .then(() => {
+        toast.success("Order berhasil dihapus");
+        router.refresh();
+      }).catch((err) => {
+        toast.error("Gagal menghapus order");
         console.log(err);
       });
   }, []);
